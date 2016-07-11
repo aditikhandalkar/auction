@@ -3,7 +3,7 @@ var babel = require('gulp-babel');
 
 gulp.task('build', ['buildJs', 'copyHtml', 'copyPublic', 'copyModules']);
 
-gulp.task('buildJs', ['buildLib', 'buildModels', 'buildIndex']);
+gulp.task('buildJs', ['buildLib', 'buildModels', 'buildClient', 'buildIndex']);
 
 gulp.task('buildModels', () => {
   return gulp.src('app/models/**/*.js')
@@ -15,6 +15,12 @@ gulp.task('buildLib', () => {
   return gulp.src('app/lib/**/*.js')
   .pipe(babel({presets: ['es2015']}))
   .pipe(gulp.dest('build/lib'));
+});
+
+gulp.task('buildClient', () => {
+  return gulp.src('app/client/**/*.js')
+  .pipe(babel({presets: ['es2015']}))
+  .pipe(gulp.dest('build/client'));
 });
 
 gulp.task('buildIndex', () => {
