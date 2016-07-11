@@ -19,7 +19,8 @@ describe('lib', () => {
     });
     it('add user', done => {
       const user = new User({name: 'vijay'});
-      repo.addUser(user.getObject(), id => {
+      repo.addUser(user, id => {
+        id.should.be.above(0);
         done();
       });
     });
