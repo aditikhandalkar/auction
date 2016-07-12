@@ -8,6 +8,7 @@
     <script src="/scripts/app.js"></script>
     <script src="/scripts/loginController.js"></script>
     <script src="/scripts/userController.js"></script>
+    <script src="/scripts/inventoryController.js"></script>
   </head>
   </head>
   <body>
@@ -30,6 +31,25 @@
           </div>
         </div>
         <div class="col-md-4">
+          <div class="panel panel-info" ng-controller="InventoryController" ng-show="loggedIn">
+            <div class="panel-heading">Inventory</div>
+            <div class="panel-body">
+              <div class="row inventory-row" ng-repeat="item in items">
+                <div class="col-sm-4 text-center">
+                  <img style="width: 90%" ng-src="{{item.image}}" />
+                  <div>{{item.name}}</div>
+                </div>
+                <div class="col-sm-4 text-center">
+                  <div style="font-size: 2em; margin-top: 20px">{{item.value}}</div>
+                </div>
+                <div class="col-sm-4 text-center">
+                  <div style="margin-top: 20px; margin-right: 20px;">
+                    <input type="button" class="btn btn-primary" value="Auction" ng-click="auction()"/>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="col-md-4">
         </div>
