@@ -47,6 +47,17 @@ app.post('/login', (req, res) => {
   });
 });
 
+app.post('/queueAuction', (req, res) => {
+  console.log(req.body);
+  res.send({});
+});
+
+app.post('/placeBid', (req, res) => {
+  console.log(req.body);
+  res.send({});
+});
+
+// this method should be removed.
 app.post('/closeAuction', (req, res) => {
   console.log(req.body);
   res.send({});
