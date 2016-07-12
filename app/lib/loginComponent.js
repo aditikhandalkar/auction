@@ -1,7 +1,7 @@
 import UserRepo from './userRepo';
 import User from '../models/user';
 
-export default class LoginController {
+export default class LoginComponent {
 
   constructor(context) {
     this.loggedInUsers = [];

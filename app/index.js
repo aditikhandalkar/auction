@@ -1,7 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import Context from './lib/database/context';
-import LoginController from './lib/loginController';
+import LoginComponent from './lib/loginComponent';
 
 const app = express();
 app.use(bodyParser.json());
@@ -30,8 +30,8 @@ app.get('/', (req, res) => {
 const context = new Context();
 
 app.post('/login', (req, res) => {
-  const loginController = new LoginController(context);
-  loginController.login(req.body.name)
+  const comp = new LoginComponent(context);
+  comp.login(req.body.name)
   .then(user => {
     res.send({
       user,
