@@ -5,6 +5,8 @@ const app = express();
 app.use(express.static(`${__dirname}/public`));
 app.use('/scripts', express.static(`${__dirname}/client/`));
 
+const jqueryJs = `${__dirname}/node_modules/jquery`;
+app.use('/scripts', express.static(jqueryJs));
 const angularJs = `${__dirname}/node_modules/angular/`;
 app.use('/scripts', express.static(angularJs));
 const bootstrapJs = `${__dirname}/node_modules/bootstrap/dist/js`;
