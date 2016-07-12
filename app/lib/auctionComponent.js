@@ -5,6 +5,7 @@ export default class AuctionComponent {
     this.repo = new AuctionRepo(context);
     this.auctions = [];
     this.currentAuction = null;
+    this.timeRemaining = 0;
   }
 
   queueAuction(auction) {
@@ -27,7 +28,8 @@ export default class AuctionComponent {
   }
 
   closeAuction(auction) {
-    this.repo.closeAuction(auction);
+    this.repo.closeAuction(this.currentAuction);
+    // transfer balances.
     this.currentAuction = null;
     this.tryStartAuction();
   }
@@ -36,6 +38,15 @@ export default class AuctionComponent {
     if (!this.currentAuction) {
       if (this.auctions.length > 0) {
         this.currentAuction = this.auctions.splice(0, 1)[0];
+        this.timeRemaining = 90;
+        const handle = setInterval(1000, () => {
+          this.timeRemaining -= 1;
+          // notify all.
+          if (this.timeRemaining === 0) {
+            this.closeAuction();
+            clearInterval(handle);
+          }
+        });
         // notify about the auction
       }
     }
