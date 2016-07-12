@@ -18,4 +18,13 @@ app.controller('InventoryController', function($scope, $rootScope) {
       value: args.userInfo.diamonds
     });
   });
+
+  $scope.auction = function(item) {
+    $rootScope.$broadcast('auction', {
+      name: item.name,
+      maxQuantity: item.value,
+      image: item.image
+    });
+    console.log('auction is broadcast');
+  }
 });
