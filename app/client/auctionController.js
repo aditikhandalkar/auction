@@ -37,7 +37,7 @@ app.controller('AuctionController', function($scope, $rootScope, $http, config) 
 
   $scope.$on('timer-stopped', function(event, data) {
     console.log('timer-stopped');
-    $scope.$apply(stopAuction);
+    stopAuction();
   });
 
   /**
@@ -67,7 +67,10 @@ app.controller('AuctionController', function($scope, $rootScope, $http, config) 
   * Stops an auction.
   */
   function stopAuction() {
-    $scope.auctionRunning = false;
+    console.log('stopping the auction');
+    $scope.$apply(function() {
+      $scope.auctionRunning = false;
+    });
     $http({
       method: 'POST',
       url: `${config.siteUrl}/closeAuction`,

@@ -49,6 +49,7 @@ app.post('/login', (req, res) => {
 
 app.post('/closeAuction', (req, res) => {
   console.log(req.body);
+  res.send({});
 });
 
 app.listen(9000, () => {
