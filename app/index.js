@@ -5,8 +5,12 @@ const app = express();
 app.use(express.static(`${__dirname}/public`));
 app.use('/scripts', express.static(`${__dirname}/client/`));
 
-const angular = `${__dirname}/node_modules/angular/`;
-app.use('/scripts', express.static(angular));
+const angularJs = `${__dirname}/node_modules/angular/`;
+app.use('/scripts', express.static(angularJs));
+const bootstrapJs = `${__dirname}/node_modules/bootstrap/dist/js`;
+app.use('/scripts', express.static(bootstrapJs));
+const bootstrapCss = `${__dirname}/node_modules/bootstrap/dist/css`;
+app.use('/styles', express.static(bootstrapCss));
 
 app.get('/', (req, res) => {
   console.log(__dirname);

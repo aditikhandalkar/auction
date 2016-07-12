@@ -1,11 +1,17 @@
 <html ng-app="app">
   <head>
     <title>Live Auction</title>
+    <link rel="stylesheet" href="/styles/bootstrap.css">
+    <script src="/scripts/bootstrap.js"></script>
     <script src="/scripts/angular.js"></script>
     <script src="/scripts/app.js"></script>
     <script src="/scripts/mainController.js"></script>
   </head>
   <body>
-    <h1 ng-controller="MainController">{{message}}</h1>
+    <div class="container">
+      <div class="well">
+        <h1 ng-controller="MainController">{{message}}</h1>
+      </div>
+    </div>
   </body>
 </html>
