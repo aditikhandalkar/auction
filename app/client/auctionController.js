@@ -1,4 +1,4 @@
-app.controller('AuctionController', function($scope, $rootScope) {
+app.controller('AuctionController', function($scope, $rootScope, $http, config) {
 
   $scope.auctionQueue = [];
   $scope.auctionRunning = false;
@@ -22,6 +22,8 @@ app.controller('AuctionController', function($scope, $rootScope) {
   $scope.bid = function() {
     if ($scope.coins > $scope.winningBid) {
       $scope.winningBid = $scope.coins;
+      $scope.auction.buyerName = $scope.name;
+      $scope.auction.coins = $scope.coins;
       if ($scope.timeRemaining < 10) {
         $scope.timeRemaining += 10;
         $rootScope.$broadcast('timer-set-countdown', $scope.timeRemaining);
@@ -35,19 +37,23 @@ app.controller('AuctionController', function($scope, $rootScope) {
 
   $scope.$on('timer-stopped', function(event, data) {
     console.log('timer-stopped');
-    $scope.$apply(function() {
-      $scope.auctionRunning = false;
-      if ($scope.auctionQueue.length > 0) {
-        const removedArray = $scope.auctionQueue.splice(0, 1);
-        startAuction(removedArray[0]);
-      }
-    });
+    $scope.$apply(stopAuction);
   });
 
   /**
- * Starts an auction.
- * @param {object} auction Auction to start.
+ * Tries to start an auction.
  */
+  function tryStartAuction() {
+    if ($scope.auctionQueue.length > 0) {
+      const removedArray = $scope.auctionQueue.splice(0, 1);
+      startAuction(removedArray[0]);
+    }
+  }
+
+  /**
+  * Starts an auction.
+  * @param {object} auction - Auction to start
+  */
   function startAuction(auction) {
     console.log('starting an auction');
     $scope.winningBid = 0;
@@ -55,5 +61,21 @@ app.controller('AuctionController', function($scope, $rootScope) {
     $scope.auctionRunning = true;
     $scope.auction = auction;
     $rootScope.$broadcast('timer-start');
+  }
+
+  /**
+  * Stops an auction.
+  */
+  function stopAuction() {
+    $scope.auctionRunning = false;
+    $http({
+      method: 'POST',
+      url: `${config.siteUrl}/closeAuction`,
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: $scope.auction
+    })
+    .then(tryStartAuction);
   }
 });

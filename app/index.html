@@ -95,10 +95,10 @@
                 <timer autostart="false" interval="1000" countdown="timeRemaining">{{minutes}} minute{{minutesS}}, {{seconds}} second{{secondsS}}</timer>
               </strong></div>
               <div>Winning Bid: <strong>{{winningBid}}</strong></div>
-              <div class="text-center" style="margin-top: 40px;">
+              <div class="text-center" style="margin: 40px 15px 0 15px;">
                 <form name="placeBidForm" role="form" class="form form-horizontal">
                   <div class="form-group">
-                    <input type="number" required min="1" max="{{maxCoins}}" ng-pattern="/^\d+$/" name="coins" ng-model="coins" placeholder="Coins">
+                    <input type="number" class="form-control" required min="1" max="{{maxCoins}}" ng-pattern="/^\d+$/" name="coins" ng-model="coins" placeholder="Coins">
                   </div>
                   <div class="form-group">
                     <input type="button" class="btn btn-primary" value="Place Bid" ng-disabled="placeBidForm.$invalid" ng-click="bid()"/>
