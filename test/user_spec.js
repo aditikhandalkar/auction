@@ -8,7 +8,7 @@ describe('models', () => {
   describe('user', () => {
     let user;
     before(() => {
-      user = new User({name: 'vijay'});
+      user = new User('vijay');
     });
     it('has name', () => {
       should.exist(user.name);

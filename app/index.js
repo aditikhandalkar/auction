@@ -1,7 +1,10 @@
 import express from 'express';
+import bodyParser from 'body-parser';
+import Context from './lib/database/context';
+import LoginController from './lib/loginController';
 
 const app = express();
-
+app.use(bodyParser.json());
 app.use(express.static(`${__dirname}/public`));
 app.use('/scripts', express.static(`${__dirname}/client/`));
 
@@ -21,8 +24,27 @@ const humanizeDurationJs = `${__dirname}/node_modules/humanize-duration`;
 app.use('/scripts', express.static(humanizeDurationJs));
 
 app.get('/', (req, res) => {
-  console.log(__dirname);
   res.sendFile(`${__dirname}/index.html`);
+});
+
+const context = new Context();
+
+app.post('/login', (req, res) => {
+  const loginController = new LoginController(context);
+  loginController.login(req.body.name)
+  .then(user => {
+    res.send({
+      user,
+      message: 'logged in',
+      isError: false
+    });
+  })
+  .catch(err => {
+    res.send({
+      message: err,
+      isError: true
+    });
+  });
 });
 
 app.listen(9000, () => {

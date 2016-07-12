@@ -17,10 +17,11 @@ describe('lib', () => {
     it('repo exists', () => {
       should.exist(repo);
     });
-    it('add user', done => {
-      const user = new User({name: 'vijay'});
-      repo.addUser(user, id => {
-        id.should.be.above(0);
+    it('register user', done => {
+      const user = new User('vijay');
+      repo.registerUser(user)
+      .then(user => {
+        should.exist(user);
         done();
       });
     });

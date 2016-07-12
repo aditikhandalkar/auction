@@ -1,6 +1,6 @@
 export default class User {
-  constructor(props) {
-    this.name = props.name || '';
+  constructor(name) {
+    this.name = name || '__default';
     this.coins = 1000;
     this.breads = 30;
     this.carrots = 18;
