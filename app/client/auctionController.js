@@ -3,7 +3,7 @@ app.controller('AuctionController', function($scope, $rootScope) {
   $scope.auctionQueue = [];
   $scope.auctionRunning = false;
   $scope.winningBid = 0;
-  $scope.timeRemaining = 10;
+  $scope.timeRemaining = 90;
 
   $scope.$on('startAuction', function(e, args) {
     const auction = {
@@ -24,17 +24,24 @@ app.controller('AuctionController', function($scope, $rootScope) {
       $scope.winningBid = $scope.coins;
       if ($scope.timeRemaining < 10) {
         $scope.timeRemaining += 10;
+        $rootScope.$broadcast('timer-set-countdown', $scope.timeRemaining);
       }
     }
   };
 
+  $scope.$on('timer-tick', function(event, data) {
+    $scope.timeRemaining -= 1;
+  });
+
   $scope.$on('timer-stopped', function(event, data) {
     console.log('timer-stopped');
-    $scope.auctionRunning = false;
-    if ($scope.auctionQueue.length > 0) {
-      const removedArray = $scope.auctionQueue.splice(0, 1);
-      startAuction(removedArray[0]);
-    }
+    $scope.$apply(function() {
+      $scope.auctionRunning = false;
+      if ($scope.auctionQueue.length > 0) {
+        const removedArray = $scope.auctionQueue.splice(0, 1);
+        startAuction(removedArray[0]);
+      }
+    });
   });
 
   /**
@@ -43,7 +50,8 @@ app.controller('AuctionController', function($scope, $rootScope) {
  */
   function startAuction(auction) {
     console.log('starting an auction');
-    $scope.timeRemaining = 10;
+    $scope.winningBid = 0;
+    $scope.timeRemaining = 90;
     $scope.auctionRunning = true;
     $scope.auction = auction;
     $rootScope.$broadcast('timer-start');
