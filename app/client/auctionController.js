@@ -19,10 +19,20 @@ app.controller('AuctionController', function($scope, $rootScope, $http, config) 
       $scope.winningBid = $scope.coins;
       $scope.auction.buyerName = $scope.name;
       $scope.auction.itemValue = $scope.coins;
-      if ($scope.timeRemaining < 10) {
-        $scope.timeRemaining += 10;
-        $rootScope.$broadcast('timer-set-countdown', $scope.timeRemaining);
-      }
+      $http({
+        method: 'POST',
+        url: `${config.siteUrl}/placeBid`,
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        data: $scope.auction
+      })
+      .then(function() {
+        if ($scope.timeRemaining < 10) {
+          $scope.timeRemaining += 10;
+          $rootScope.$broadcast('timer-set-countdown', $scope.timeRemaining);
+        }
+      });
     }
   };
 

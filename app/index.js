@@ -60,13 +60,19 @@ app.post('/queueAuction', (req, res, next) => {
   .catch(next);
 });
 
-app.post('/placeBid', (req, res) => {
+app.post('/placeBid', (req, res, next) => {
   console.log(req.body);
-  res.send({});
+  const comp = new AuctionComponent(context);
+  comp.placeBid(req.body)
+  .then(() => {
+    res.send({
+    });
+  })
+  .catch(next);
 });
 
 // this method should be removed.
-app.post('/closeAuction', (req, res) => {
+app.post('/closeAuction', (req, res, next) => {
   console.log(req.body);
   res.send({});
 });

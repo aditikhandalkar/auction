@@ -8,14 +8,25 @@ export default class AuctionRepo {
     return new Promise((res, rej) => {
       this.context(this.tableName)
       .insert(auction)
-      .then(id => {
-        res(id);
+      .then(ids => {
+        res(ids[0]);
       })
       .catch(rej);
     });
   }
 
-  closeAuction() {
-
+  placeBid(bid) {
+    return new Promise((res, rej) => {
+      this.context(this.tableName)
+      .where({
+        id: bid.id
+      })
+      .update({
+        buyerName: bid.buyerName,
+        itemValue: bid.itemValue
+      })
+      .then(res)
+      .catch(rej);
+    });
   }
 }

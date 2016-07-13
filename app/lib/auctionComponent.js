@@ -6,6 +6,8 @@ export default class AuctionComponent {
     this.auctions = [];
     this.currentAuction = null;
     this.timeRemaining = 0;
+
+    this.closeAuction = this.closeAuction.bind(this);
   }
 
   queueAuction(auction) {
@@ -23,12 +25,20 @@ export default class AuctionComponent {
   }
 
   placeBid(bid) {
-    this.repo.placeBid(bid);
-    // notify about the bid
+    return new Promise((res, rej) => {
+      this.repo.placeBid(bid)
+      .then(() => {
+        if (this.timeRemaining < 10) {
+          this.timeRemaining += 10;
+        }
+        // notify about the bid
+        res();
+      })
+      .catch(rej);
+    });
   }
 
   closeAuction(auction) {
-    this.repo.closeAuction(this.currentAuction);
     // transfer balances.
     this.currentAuction = null;
     this.tryStartAuction();
