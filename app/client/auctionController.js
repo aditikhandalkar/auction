@@ -7,13 +7,22 @@ app.controller('AuctionController', function($scope, $rootScope, $http, config) 
 
   const socket = io.connect(config.siteUrl);
 
+  $scope.$on('login', function(e, args) {
+    $http({
+      method: 'GET',
+      url: `${config.siteUrl}/auction`,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(function(res) {
+      startAuction(res.data);
+    });
+  });
+
   socket.on('newAuction', function(auction) {
     $scope.$apply(function() {
-      $scope.auctionRunning = true;
-      $scope.auction = auction;
-      if ($rootScope.name === $scope.auction.sellerName) {
-        $scope.disableBid = true;
-      }
+      startAuction(auction);
     });
   });
 
@@ -49,4 +58,16 @@ app.controller('AuctionController', function($scope, $rootScope, $http, config) 
       });
     }
   };
+
+  /**
+  * starts an auction
+  * @param {object} auction auction to start
+  */
+  function startAuction(auction) {
+    $scope.auctionRunning = true;
+    $scope.auction = auction;
+    if ($rootScope.name === $scope.auction.sellerName) {
+      $scope.disableBid = true;
+    }
+  }
 });

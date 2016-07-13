@@ -73,9 +73,12 @@ app.post('/placeBid', (req, res, next) => {
 });
 
 // this method should be removed.
-app.post('/closeAuction', (req, res, next) => {
-  console.log(req.body);
-  res.send({});
+app.get('/auction', (req, res, next) => {
+  auctionComponent.getAuction()
+  .then(auction => {
+    res.send(auction);
+  })
+  .catch(next);
 });
 
 server.listen(9000, () => {

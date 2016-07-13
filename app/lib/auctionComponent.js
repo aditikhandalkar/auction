@@ -38,6 +38,12 @@ export default class AuctionComponent {
     });
   }
 
+  getAuction() {
+    return this.currentAuction ?
+    Promise.resolve(this.currentAuction) :
+    Promise.reject('No auction available');
+  }
+
   closeAuction(auction) {
     // transfer balances.
     this.currentAuction = null;
