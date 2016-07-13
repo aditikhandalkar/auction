@@ -30,4 +30,18 @@ export default class UserRepo {
       .catch(rej);
     });
   }
+
+  updateItem(order) {
+    return new Promise((res, rej) => {
+      this.context(this.tableName)
+      .where({
+        name: order.userName
+      })
+      .update({
+        [order.itemName]: order.itemValue
+      })
+      .then(res)
+      .catch(rej);
+    });
+  }
 }

@@ -1,8 +1,10 @@
 import AuctionRepo from './auctionRepo';
+import SettlementComponent from './settlementComponent';
 
 export default class AuctionComponent {
   constructor(context, io) {
     this.repo = new AuctionRepo(context);
+    this.context = context;
     this.io = io;
     this.auctions = [];
     this.currentAuction = null;
@@ -28,6 +30,8 @@ export default class AuctionComponent {
     return new Promise((res, rej) => {
       this.repo.placeBid(bid)
       .then(() => {
+        this.currentAuction.buyerName = bid.buyerName;
+        this.currentAuction.itemValue = bid.itemValue;
         if (this.timeRemaining < 10) {
           this.timeRemaining += 10;
         }
@@ -44,10 +48,14 @@ export default class AuctionComponent {
     Promise.reject('No auction available');
   }
 
-  closeAuction(auction) {
-    // transfer balances.
-    this.currentAuction = null;
-    this.tryStartAuction();
+  closeAuction() {
+    const settlementComponent = new SettlementComponent(this.context, this.io);
+    settlementComponent.settle(this.currentAuction)
+    .then(() => {
+      this.currentAuction = null;
+      this.tryStartAuction();
+    })
+    .catch(console.log);
   }
 
   tryStartAuction(auction) {
