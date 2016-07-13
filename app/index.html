@@ -6,9 +6,6 @@
     <script src="/scripts/bootstrap.js"></script>
     <script src="/scripts/angular.js"></script>
     <script src="/socket.io/socket.io.js"></script>
-    <script src="/scripts/moment.js"></script>
-    <script src="/scripts/humanize-duration.js"></script>
-    <script src="/scripts/angular-timer.js"></script>
     <script src="/scripts/app.js"></script>
     <script src="/scripts/config.js"></script>
     <script src="/scripts/loginController.js"></script>
@@ -93,7 +90,7 @@
                 </div>
               </div>
               <div>Time Remaining: <strong>
-                <timer autostart="false" interval="1000" countdown="timeRemaining">{{minutes}} minute{{minutesS}}, {{seconds}} second{{secondsS}}</timer>
+                {{timeRemaining}} seconds
               </strong></div>
               <div>Winning Bid: <strong>{{winningBid}}</strong></div>
               <div class="text-center" style="margin: 40px 15px 0 15px;">

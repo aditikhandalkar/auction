@@ -52,7 +52,7 @@ export default class AuctionComponent {
         const handle = setInterval(() => {
           this.timeRemaining -= 1;
           console.log(this.timeRemaining);
-          // notify all.
+          this.io.emit('setTime', {time: this.timeRemaining});
           if (this.timeRemaining === 0) {
             this.closeAuction();
             clearInterval(handle);

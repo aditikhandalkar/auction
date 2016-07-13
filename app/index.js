@@ -25,12 +25,6 @@ const bootstrapJs = `${__dirname}/node_modules/bootstrap/dist/js`;
 app.use('/scripts', express.static(bootstrapJs));
 const bootstrapCss = `${__dirname}/node_modules/bootstrap/dist/css`;
 app.use('/styles', express.static(bootstrapCss));
-const angularTimerJs = `${__dirname}/node_modules/angular-timer/dist`;
-app.use('/scripts', express.static(angularTimerJs));
-const momentJs = `${__dirname}/node_modules/moment`;
-app.use('/scripts', express.static(momentJs));
-const humanizeDurationJs = `${__dirname}/node_modules/humanize-duration`;
-app.use('/scripts', express.static(humanizeDurationJs));
 
 app.get('/', (req, res) => {
   res.sendFile(`${__dirname}/index.html`);
