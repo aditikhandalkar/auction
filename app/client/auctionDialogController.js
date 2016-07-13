@@ -1,4 +1,4 @@
-app.controller('AuctionDialogController', function($scope, $rootScope) {
+app.controller('AuctionDialogController', function($scope, $rootScope, $http, config) {
   $scope.$on('auction', function(e, args) {
     $scope.itemName = args.name;
     $scope.maxQuantity = args.maxQuantity;
@@ -8,10 +8,25 @@ app.controller('AuctionDialogController', function($scope, $rootScope) {
 
   $scope.startAuction = function() {
     $scope.showDialog = false;
-    $rootScope.$broadcast('startAuction', {
+    const auction = {
+      sellerName: $rootScope.name,
       itemName: $scope.itemName,
-      quantity: $scope.quantity,
-      image: $scope.image
+      itemImage: $scope.image,
+      itemQuantity: $scope.quantity,
+      buyerName: '',
+      itemValue: 0
+    };
+    $http({
+      method: 'POST',
+      url: `${config.siteUrl}/queueAuction`,
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: auction
+    })
+    .then(function(res) {
+      auction.id = res.data.id;
+      $rootScope.$broadcast('startAuction', {auction: auction});
     });
   };
 

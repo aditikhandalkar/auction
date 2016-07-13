@@ -6,12 +6,7 @@ app.controller('AuctionController', function($scope, $rootScope, $http, config) 
   $scope.timeRemaining = 90;
 
   $scope.$on('startAuction', function(e, args) {
-    const auction = {
-      sellerName: $rootScope.name,
-      itemName: args.itemName,
-      image: args.image,
-      quantity: args.quantity
-    };
+    const auction = args.auction;
     if ($scope.auctionRunning) {
       $scope.auctionQueue.push(auction);
     } else {
@@ -23,7 +18,7 @@ app.controller('AuctionController', function($scope, $rootScope, $http, config) 
     if ($scope.coins > $scope.winningBid) {
       $scope.winningBid = $scope.coins;
       $scope.auction.buyerName = $scope.name;
-      $scope.auction.coins = $scope.coins;
+      $scope.auction.itemValue = $scope.coins;
       if ($scope.timeRemaining < 10) {
         $scope.timeRemaining += 10;
         $rootScope.$broadcast('timer-set-countdown', $scope.timeRemaining);

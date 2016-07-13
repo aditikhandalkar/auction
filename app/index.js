@@ -2,6 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import Context from './lib/database/context';
 import LoginComponent from './lib/loginComponent';
+import AuctionComponent from './lib/auctionComponent';
 
 const app = express();
 app.use(bodyParser.json());
@@ -47,9 +48,16 @@ app.post('/login', (req, res) => {
   });
 });
 
-app.post('/queueAuction', (req, res) => {
+app.post('/queueAuction', (req, res, next) => {
   console.log(req.body);
-  res.send({});
+  const comp = new AuctionComponent(context);
+  comp.queueAuction(req.body)
+  .then(id => {
+    res.send({
+      id
+    });
+  })
+  .catch(next);
 });
 
 app.post('/placeBid', (req, res) => {

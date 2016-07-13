@@ -39,14 +39,15 @@ export default class AuctionComponent {
       if (this.auctions.length > 0) {
         this.currentAuction = this.auctions.splice(0, 1)[0];
         this.timeRemaining = 90;
-        const handle = setInterval(1000, () => {
+        const handle = setInterval(() => {
           this.timeRemaining -= 1;
+          console.log(this.timeRemaining);
           // notify all.
           if (this.timeRemaining === 0) {
             this.closeAuction();
             clearInterval(handle);
           }
-        });
+        }, 1000);
         // notify about the auction
       }
     }
