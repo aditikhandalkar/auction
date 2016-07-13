@@ -1,8 +1,9 @@
 import UserRepo from './userRepo';
 
 export default class SettlementComponent {
-  constructor(context) {
+  constructor(context, io) {
     this.repo = new UserRepo(context);
+    this.io = io;
   }
 
   settle(auction) {
@@ -19,48 +20,43 @@ export default class SettlementComponent {
       .then(user => {
         buyer = user;
         const itemName = `${auction.itemName}s`;
-        let itemValue = user[itemName];
-        console.log(itemValue);
-        itemValue += auction.itemQuantity;
+        user[itemName] += auction.itemQuantity;
         return this.repo.updateItem({
           userName: auction.buyerName,
           itemName,
-          itemValue
+          itemValue: user[itemName]
         });
       })
       .then(() => {
-        const itemName = 'coins';
-        const itemValue = buyer.coins - auction.itemValue;
+        buyer.coins -= auction.itemValue;
         return this.repo.updateItem({
           userName: auction.buyerName,
-          itemName,
-          itemValue
+          itemName: 'coins',
+          itemValue: buyer.coins
         });
       })
       .then(() => this.repo.getUser(auction.sellerName))
       .then(user => {
         seller = user;
         const itemName = `${auction.itemName}s`;
-        let itemValue = user[itemName];
-        console.log(itemValue);
-        itemValue -= auction.itemQuantity;
+        user[itemName] -= auction.itemQuantity;
         return this.repo.updateItem({
           userName: auction.sellerName,
           itemName,
-          itemValue
+          itemValue: user[itemName]
         });
       })
       .then(() => {
-        const itemName = 'coins';
-        const itemValue = seller.coins + auction.itemValue;
+        seller.coins += auction.itemValue;
         return this.repo.updateItem({
           userName: auction.sellerName,
-          itemName,
-          itemValue
+          itemName: 'coins',
+          itemValue: seller.coins
         });
       })
       .then(() => {
-        // io communications
+        this.io.emit('setUser', buyer);
+        this.io.emit('setUser', seller);
         res();
       })
       .catch(rej);
