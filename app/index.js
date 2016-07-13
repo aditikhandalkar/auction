@@ -1,10 +1,18 @@
 import express from 'express';
+import http from 'http';
 import bodyParser from 'body-parser';
+import socketio from 'socket.io';
 import Context from './lib/database/context';
 import LoginComponent from './lib/loginComponent';
 import AuctionComponent from './lib/auctionComponent';
 
 const app = express();
+const server = http.createServer(app);
+const io = socketio(server);
+io.on('connection', function(socket) {
+  socket.emit('greeting', {message: 'hello world'});
+});
+
 app.use(bodyParser.json());
 app.use(express.static(`${__dirname}/public`));
 app.use('/scripts', express.static(`${__dirname}/client/`));
@@ -29,6 +37,7 @@ app.get('/', (req, res) => {
 });
 
 const context = new Context();
+const auctionComponent = new AuctionComponent(context, io);
 
 app.post('/login', (req, res) => {
   const comp = new LoginComponent(context);
@@ -50,8 +59,7 @@ app.post('/login', (req, res) => {
 
 app.post('/queueAuction', (req, res, next) => {
   console.log(req.body);
-  const comp = new AuctionComponent(context);
-  comp.queueAuction(req.body)
+  auctionComponent.queueAuction(req.body)
   .then(id => {
     res.send({
       id
@@ -62,8 +70,7 @@ app.post('/queueAuction', (req, res, next) => {
 
 app.post('/placeBid', (req, res, next) => {
   console.log(req.body);
-  const comp = new AuctionComponent(context);
-  comp.placeBid(req.body)
+  auctionComponent.placeBid(req.body)
   .then(() => {
     res.send({
     });
@@ -77,6 +84,6 @@ app.post('/closeAuction', (req, res, next) => {
   res.send({});
 });
 
-app.listen(9000, () => {
+server.listen(9000, () => {
   console.log('listening on port 9000');
 });

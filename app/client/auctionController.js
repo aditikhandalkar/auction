@@ -5,8 +5,9 @@ app.controller('AuctionController', function($scope, $rootScope, $http, config) 
   $scope.winningBid = 0;
   $scope.timeRemaining = 90;
 
-  $scope.$on('startAuction', function(e, args) {
-    const auction = args.auction;
+  const socket = io.connect(config.siteUrl);
+
+  socket.on('newAuction', function(auction) {
     if ($scope.auctionRunning) {
       $scope.auctionQueue.push(auction);
     } else {

@@ -26,7 +26,6 @@ app.controller('AuctionDialogController', function($scope, $rootScope, $http, co
     })
     .then(function(res) {
       auction.id = res.data.id;
-      $rootScope.$broadcast('startAuction', {auction: auction});
     });
   };
 

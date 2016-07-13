@@ -1,12 +1,12 @@
 import AuctionRepo from './auctionRepo';
 
 export default class AuctionComponent {
-  constructor(context) {
+  constructor(context, io) {
     this.repo = new AuctionRepo(context);
+    this.io = io;
     this.auctions = [];
     this.currentAuction = null;
     this.timeRemaining = 0;
-
     this.closeAuction = this.closeAuction.bind(this);
   }
 
@@ -58,7 +58,7 @@ export default class AuctionComponent {
             clearInterval(handle);
           }
         }, 1000);
-        // notify about the auction
+        this.io.emit('newAuction', this.currentAuction);
       }
     }
   }
