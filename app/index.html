@@ -92,14 +92,14 @@
               <div>Time Remaining: <strong>
                 {{timeRemaining}} seconds
               </strong></div>
-              <div>Winning Bid: <strong>{{winningBid}}</strong></div>
+              <div>Winning Bid: <strong>{{auction.itemValue}}</strong></div>
               <div class="text-center" style="margin: 40px 15px 0 15px;">
                 <form name="placeBidForm" role="form" class="form form-horizontal">
                   <div class="form-group">
                     <input type="number" class="form-control" required min="1" max="{{maxCoins}}" ng-pattern="/^\d+$/" name="coins" ng-model="coins" placeholder="Coins">
                   </div>
                   <div class="form-group">
-                    <input type="button" class="btn btn-primary" value="Place Bid" ng-disabled="placeBidForm.$invalid" ng-click="bid()"/>
+                    <input type="button" class="btn btn-primary" value="Place Bid" ng-disabled="placeBidForm.$invalid || disableBid" ng-click="bid()"/>
                   </div>
                 </form>
               </div>

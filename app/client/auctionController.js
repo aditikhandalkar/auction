@@ -2,17 +2,19 @@ app.controller('AuctionController', function($scope, $rootScope, $http, config) 
 
   $scope.auctionQueue = [];
   $scope.auctionRunning = false;
-  $scope.winningBid = 0;
   $scope.timeRemaining = 90;
+  $scope.disableBid = false;
 
   const socket = io.connect(config.siteUrl);
 
   socket.on('newAuction', function(auction) {
-    if ($scope.auctionRunning) {
-      $scope.auctionQueue.push(auction);
-    } else {
-      startAuction(auction);
-    }
+    $scope.$apply(function() {
+      $scope.auctionRunning = true;
+      $scope.auction = auction;
+      if ($rootScope.name === $scope.auction.sellerName) {
+        $scope.disableBid = true;
+      }
+    });
   });
 
   socket.on('setTime', function(data) {
@@ -24,31 +26,27 @@ app.controller('AuctionController', function($scope, $rootScope, $http, config) 
     });
   });
 
+  socket.on('newBid', function(bid) {
+    $scope.$apply(function() {
+      $scope.auction.buyerName = bid.buyerName;
+      $scope.auction.itemValue = bid.itemValue;
+    });
+  });
+
   $scope.bid = function() {
-    if ($scope.coins > $scope.winningBid) {
-      $scope.winningBid = $scope.coins;
-      $scope.auction.buyerName = $scope.name;
-      $scope.auction.itemValue = $scope.coins;
+    if ($scope.coins > $scope.auction.itemValue) {
       $http({
         method: 'POST',
         url: `${config.siteUrl}/placeBid`,
         headers: {
           'Content-Type': 'application/json'
         },
-        data: $scope.auction
+        data: {
+          id: $scope.auction.id,
+          buyerName: $scope.name,
+          itemValue: $scope.coins
+        }
       });
     }
   };
-
-  /**
-  * Starts an auction.
-  * @param {object} auction - Auction to start
-  */
-  function startAuction(auction) {
-    console.log('starting an auction');
-    $scope.winningBid = 0;
-    $scope.auctionRunning = true;
-    $scope.auction = auction;
-    // $rootScope.$broadcast('timer-start');
-  }
 });

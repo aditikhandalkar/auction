@@ -31,7 +31,7 @@ export default class AuctionComponent {
         if (this.timeRemaining < 10) {
           this.timeRemaining += 10;
         }
-        // notify about the bid
+        this.io.emit('newBid', bid);
         res();
       })
       .catch(rej);
