@@ -1,6 +1,6 @@
 # auction
-Demo of NodeJS, Gulp, Mocha, Express.
-The project is a sample project illustrating the use of NodeJS, Gulp, Mocha, Express with ES 2015 coding style.
+Demo of NodeJS, Express, Gulp, Mocha, Angular, Socket.io.
+The project is a sample project illustrating the use of NodeJS, Express, Gulp, Mocha, Angular, Socket.io with ES 2015 coding style.
 
 # Steps to run
 * cd auction
@@ -8,9 +8,8 @@ The project is a sample project illustrating the use of NodeJS, Gulp, Mocha, Exp
 * cd app
 * npm i
 * cd ..
-* npm start
-* Browse at http://localhost:9000
-* npm test - to run tests.
+* gulp
+* Browse at http://localhost:3000
 
 YouTube Video - [https://youtu.be/Zo62B16X1rc] (https://youtu.be/Zo62B16X1rc) 
 
