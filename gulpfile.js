@@ -1,45 +1,95 @@
-var gulp = require('gulp');
-var babel = require('gulp-babel');
+const gulp = require('gulp');
+const babel = require('gulp-babel');
+const nodemon = require('gulp-nodemon');
+const browserSync = require('browser-sync');
+const browserify = require('browserify');
+const source = require('vinyl-source-stream');
+const concat = require('gulp-concat');
+const config = require('./config');
 
-gulp.task('build', ['buildJs', 'copyHtml', 'copyPublic', 'copyModules']);
+function startBrowserSync() {
+  if (browserSync.active) {
+    return;
+  }
+  gulp.watch(config.clientSource, ['buildClient']);
 
-gulp.task('buildJs', ['buildLib', 'buildModels', 'buildClient', 'buildIndex']);
+  const options = {
+    proxy: `${config.host}:${config.port}`,
+    port: config.otherPort,
+    files: [config.clientTarget, config.publicTarget],
+    injectChanges: true,
+    reloadDelay: 1000
+  };
+  browserSync(options);
+}
 
-gulp.task('buildModels', () => {
-  return gulp.src('app/models/**/*.js')
-  .pipe(babel({presets: ['es2015']}))
-  .pipe(gulp.dest('build/models'));
+gulp.task('default', ['serve']);
+
+gulp.task('serve', ['build'], () => {
+  const options = {
+    script: config.server,
+    delayTime: 1,
+    env: {
+      PORT: config.port,
+      NODE_ENV: 'dev'
+    },
+    watch: [config.serverSource]
+  };
+  return nodemon(options)
+  .on('restart', ['buildServer'])
+  .on('start', startBrowserSync);
 });
 
-gulp.task('buildLib', () => {
-  return gulp.src('app/lib/**/*.js')
-  .pipe(babel({presets: ['es2015']}))
-  .pipe(gulp.dest('build/lib'));
-});
+gulp.task('build', ['buildServer', 'buildClient']);
+gulp.task('buildClient',
+['copyIndex', 'copyPublic', 'browserify', 'buildStyles']
+);
 
-gulp.task('buildClient', () => {
-  return gulp.src('app/client/**/*.js')
-  .pipe(babel({presets: ['es2015']}))
-  .pipe(gulp.dest('build/client'));
-});
+gulp.task('buildServer', () =>
+gulp.src(config.serverSourceJS)
+.pipe(babel({presets: ['es2015']}))
+.pipe(gulp.dest(config.serverTarget))
+);
 
-gulp.task('buildIndex', () => {
-  return gulp.src('app/index.js')
-  .pipe(babel({presets: ['es2015']}))
-  .pipe(gulp.dest('build'));
-});
+gulp.task('buildReact', () =>
+gulp.src(config.clientSourceJS)
+.pipe(babel({presets: ['es2015']}))
+.pipe(gulp.dest(config.temp))
+);
 
-gulp.task('copyHtml', () => {
-  return gulp.src('app/**/*.html')
-  .pipe(gulp.dest('build'));
-});
+gulp.task('browserify', ['buildReact'], () =>
+browserify({
+  entries: [`${config.temp}/index.js`]
+})
+.bundle()
+.pipe(source('main.js'))
+.pipe(gulp.dest(config.publicTarget))
+);
 
-gulp.task('copyPublic', () => {
-  return gulp.src('app/public/**/*')
-  .pipe(gulp.dest('build/public'));
-});
+gulp.task('copyIndex', () =>
+gulp.src(config.clientSourceHTML)
+.pipe(gulp.dest(config.clientTarget))
+);
 
-gulp.task('copyModules', () => {
-  return gulp.src('app/node_modules/**/*')
-  .pipe(gulp.dest('build/node_modules'));
-});
+gulp.task('copyPublic', () =>
+gulp.src(config.publicSource)
+.pipe(gulp.dest(config.publicTarget))
+);
+
+gulp.task('copyBootstrap', ['copyBootstrapCss', 'copyBootstrapFonts']);
+
+gulp.task('copyBootstrapCss', () =>
+gulp.src('./app/node_modules/bootstrap/dist/css/**/*')
+.pipe(gulp.dest(`${config.publicTarget}/bootstrap/css`))
+);
+
+gulp.task('copyBootstrapFonts', () =>
+gulp.src('./app/node_modules/bootstrap/dist/fonts/**/*')
+.pipe(gulp.dest(`${config.publicTarget}/bootstrap/fonts`))
+);
+
+gulp.task('buildStyles', ['copyBootstrap'], () =>
+gulp.src(config.clientSourceCSS)
+.pipe(concat('main.css'))
+.pipe(gulp.dest(config.publicTarget))
+);
