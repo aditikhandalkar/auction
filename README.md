@@ -15,8 +15,9 @@ The project is a sample project illustrating the use of NodeJS, Express, Gulp, M
 * cd app
 * npm i
 * cd ..
-* gulp
+* gulp or npm start
 * Browse at http://localhost:3000
+* npm test
 
 YouTube Video - [https://youtu.be/Zo62B16X1rc] (https://youtu.be/Zo62B16X1rc) 
 
