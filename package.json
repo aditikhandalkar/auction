@@ -4,7 +4,7 @@
   "description": "",
   "main": "build/index.js",
   "scripts": {
-    "start": "gulp build; node build/index.js",
+    "start": "gulp",
     "test": "mocha --require babel-core/register"
   },
   "author": "",

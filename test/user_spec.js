@@ -1,6 +1,6 @@
 import {describe, it, before} from 'mocha';
 import chai from 'chai';
-import User from '../app/models/user';
+import User from '../app/server/models/user';
 
 const should = chai.should();
 

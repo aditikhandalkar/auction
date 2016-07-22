@@ -1,8 +1,8 @@
 import {describe, it, before, after} from 'mocha';
 import chai from 'chai';
-import Context from '../app/lib/database/context';
-import User from '../app/models/user';
-import UserRepo from '../app/lib/userRepo';
+import Context from '../app/server/lib/database/context';
+import User from '../app/server/models/user';
+import UserRepo from '../app/server/lib/userRepo';
 
 const should = chai.should();
 

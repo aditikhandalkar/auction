@@ -1,6 +1,6 @@
 import {describe, it, before, after} from 'mocha';
 import chai from 'chai';
-import Context from '../app/lib/database/context';
+import Context from '../app/server/lib/database/context';
 
 const should = chai.should();
 
