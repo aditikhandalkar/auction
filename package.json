@@ -2,7 +2,7 @@
   "name": "auction",
   "version": "1.0.0",
   "description": "",
-  "main": "build/index.js",
+  "main": "app/build/index.js",
   "scripts": {
     "start": "gulp",
     "test": "mocha --require babel-core/register"
